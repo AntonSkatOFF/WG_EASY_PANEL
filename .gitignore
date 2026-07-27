@@ -1,59 +1,66 @@
 ```
-# Dependencies
-node_modules/
-
 # Environment variables
 .env
 .env.local
-.env.*
+*.env.*
+
+# Database
+database.sqlite
+
+# Dependencies
+node_modules/
+
+# Package manager
+package-lock.json
 
 # Logs
 *.log
 
-# Editor/IDE files
+# Temporary files
+*.tmp
+*.swp
+
+# Editors
 .vscode/
 .idea/
-*.swp
-*.swo
-*.tmp
-
-# Build artifacts
-dist/
-build/
-target/
-
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
+# Coverage reports
+coverage/
+htmlcov/
+*.coverage
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/
+
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+npm/
+.cache/
+.autogit/
+.dependency-cruiser.js
 ```
