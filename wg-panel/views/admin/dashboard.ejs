@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель - WG Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-container">
+    <nav class="navbar navbar-dark">
+      <div class="container-fluid">
+        <span class="navbar-brand">👨‍💼 Админ-панель WG</span>
+        <a href="/logout" class="btn btn-outline-light btn-sm">Выйти</a>
+      </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+      <% if (locals.error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+
+      <!-- Stats Cards -->
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="card stat-card">
+            <div class="card-body">
+              <h6 class="text-muted">Всего клиентов</h6>
+              <h2><%= stats.totalClients %></h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card stat-card">
+            <div class="card-body">
+              <h6 class="text-muted">Активных</h6>
+              <h2><%= stats.activeClients %></h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card stat-card">
+            <div class="card-body">
+              <h6 class="text-muted">Заявок на рассмотрении</h6>
+              <h2><%= stats.pendingRequests %></h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Pending Requests -->
+        <div class="col-lg-5 mb-4">
+          <div class="card">
+            <div class="card-header">
+              <h5>📋 Заявки на рассмотрение</h5>
+            </div>
+            <div class="card-body">
+              <% if (pendingRequests.length === 0) { %>
+                <p class="text-muted text-center">Нет новых заявок</p>
+              <% } else { %>
+                <% pendingRequests.forEach(req => { %>
+                  <div class="card mb-3 request-card">
+                    <div class="card-body">
+                      <h6><%= req.username || 'Аноним' %></h6>
+                      <p class="mb-2 small text-muted">
+                        Запрошено: <%= req.requestedClientName %><br>
+                        Дата: <%= new Date(req.createdAt).toLocaleString('ru-RU') %>
+                      </p>
+                      <form method="POST" action="/admin/approve/<%= req.telegramId %>" class="d-inline">
+                        <input type="hidden" name="clientName" value="<%= req.requestedClientName %>">
+                        <button type="submit" class="btn btn-success btn-sm">✅ Одобрить</button>
+                      </form>
+                      <form method="POST" action="/admin/reject/<%= req.telegramId %>" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm">❌ Отклонить</button>
+                      </form>
+                    </div>
+                  </div>
+                <% }) %>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clients List -->
+        <div class="col-lg-7">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5>👥 Все клиенты</h5>
+              <a href="https://t.me/<%= process.env.TELEGRAM_BOT_USERNAME %>" target="_blank" class="btn btn-sm btn-outline-light">
+                Telegram Бот
+              </a>
+            </div>
+            <div class="card-body">
+              <% if (clients.length === 0) { %>
+                <p class="text-muted text-center">Клиенты не найдены</p>
+              <% } else { %>
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th>Статус</th>
+                        <th>Создан</th>
+                        <th>Действия</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% clients.forEach(client => { %>
+                        <tr>
+                          <td><%= client.id %></td>
+                          <td><%= client.name %></td>
+                          <td>
+                            <span class="badge <%= client.enabled ? 'bg-success' : 'bg-secondary' %>">
+                              <%= client.enabled ? 'Активен' : 'Отключен' %>
+                            </span>
+                          </td>
+                          <td><%= new Date(client.createdAt).toLocaleDateString('ru-RU') %></td>
+                          <td>
+                            <form method="POST" action="/admin/toggle/<%= client.id %>" class="d-inline">
+                              <button type="submit" class="btn btn-sm btn-outline-primary">
+                                <%= client.enabled ? '⏸️' : '▶️' %>
+                              </button>
+                            </form>
+                            <form method="POST" action="/admin/delete/<%= client.id %>" class="d-inline" 
+                                  onsubmit="return confirm('Удалить клиента <%= client.name %>?')">
+                              <button type="submit" class="btn btn-sm btn-outline-danger">🗑️</button>
+                            </form>
+                          </td>
+                        </tr>
+                      <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
