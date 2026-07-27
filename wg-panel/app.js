@@ -9,7 +9,7 @@ const wgApi = require('./wg-api');
 const telegramService = require('./telegram-service');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 51824;
 const SESSION_SECRET = process.env.SESSION_SECRET || 'change-this-secret';
 
 // Initialize session store
