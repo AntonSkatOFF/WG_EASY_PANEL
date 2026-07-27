@@ -35,12 +35,13 @@
 
 ```bash
 # Клонируйте репозиторий
-cd /workspace
+mkdir workspace
+cd workspace
 git clone <repository_url> wg-panel
 cd wg-panel
 
 # Запустите установку от root
-sudo ./install.sh
+sh ./install.sh
 ```
 
 Скрипт автоматически:
